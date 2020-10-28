@@ -1,65 +1,120 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React from "react"
 
-export default function Home() {
+import {
+  FaGithubSquare,
+  FaEnvelope,
+  FaLaptop,
+  FaGithub,
+  FaTwitterSquare,
+  FaInstagramSquare,
+} from "react-icons/fa"
+import { IconContext } from "react-icons"
+
+import { getStaticContent } from '@tipe/next'
+
+
+export default function Home({ page }) {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div style={{width: '100%', height: '100%'}}>
+      <div style={{ width: "90%", padding: "0", margin: 'auto' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+          <h1>{page.fields.title}</h1>
+          <h2>{page.fields.subTitle}</h2>
+          <p className="main-p">
+            {page.fields.description}
+          </p>
+
+          <h2 style={{fontSize: '30px'}}>{page.fields.socialDescription}</h2>
+          <IconContext.Provider
+            value={{ size: "36px", className: "global-class-name" }}
+          >
+            <div className="icons">
+              <a href="https://github.com/phatstraw" className="ghIcon">
+                <FaGithubSquare />
+              </a>
+              <a href="mailto:Kevindsims1@gmail.com" className="ghIcon">
+                <FaEnvelope />
+              </a>
+              <a href="https://twitter.com/kevsmss" className="ghIcon">
+                <FaTwitterSquare />
+              </a>
+              <a href="https://www.instagram.com/javascriptplus/" className="ghIcon">
+                <FaInstagramSquare />
+              </a>
+            </div>
+          </IconContext.Provider>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <h2>{page.fields.blogDescription}</h2>
+              
+              <div style={{ display: "flex", flexDirection: "row", maxWidth: '800px', maxHeight: '100px', flexWrap: 'wrap', overflow: 'scroll', margin: 0, padding: 0 }}>
+                {page.fields.blogs.map(i =>{
+                 return( 
+                  <div
+                      style={{
+                        boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                        backgroundColor: "#7D7981",
+                        maxWidth: "400px",
+                        width: "350px",
+                        height: "85px",
+                        margin: '0 1rem 1rem 0',
+                        padding: 0
+                      }}
+                    >
+                        <div style={{ padding: "2px 16px", display: 'flex', flexDirection: 'column', justifyContent: 'space-between',height: '90%'}}>
+                        <h3>{i.value.title}</h3>
+                        <button
+                          style={{ backgroundColor: "black", color: "#7D7981", width: '100px' }}
+                          src={`${i.value.src}`}
+                        >
+                          {i.value.button}
+                        </button>
+                      </div>
+                    </div>
+                 )
+              })}
+              
+
+              </div>
+            </div>
+            <div>
+              <h2>{page.fields.musicDescription}</h2>
+              <iframe
+                src="https://open.spotify.com/embed/playlist/0NUtHPgeWm833NU14csQZi"
+                width="328"
+                height="80"
+                frameborder="0"
+                allowtransparency="true"
+                allow="encrypted-media"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
+}
+
+export async function getStaticProps(ctx) {
+  const { props } = await getStaticContent({
+    query: { type: 'homePage', limit: 1 },
+  })(ctx)
+
+  return {
+    props: {
+      page: props.documents[0],
+    },
+  }
 }
